@@ -265,9 +265,9 @@ call <SID>X("Cursor",		"222222",	"ecee90",	"none")
 
 if version > 700
 	call <SID>X("CursorLine",	"",	"32322e",	"none")
-	call <SID>X("CursorColumn",	"",	"2d2d2d",	"")
-	if version > 730
-		call <SID>X("ColorColumn", "", "32322e", "")
+	hi link CursorColumn CursorLine
+	if version > 703
+		call <SID>X("ColorColumn", "", "2d2d2d", "")
 	endif
 endif
 
