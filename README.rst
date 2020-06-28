@@ -4,6 +4,7 @@ Wombat colorscheme for Vim
 This colorscheme is an fork/copy of original wombat_ colorscheme by Lars
 Nielsen, which has been ported to GUI version of vim with additional changes.
 
+
 Features
 ========
 
@@ -16,6 +17,17 @@ Features
 * Added ``colorColumn`` color
 * Added appropriate colors for ShowMarks_ plugin
 * Added syntax colors for Syntastic_ plugin
+
+.. figure:: /images/wombat256grf.png
+   :alt: Colorscheme overview
+
+   Colorscheme overview
+
+.. figure:: /images/wombat256grf-diff.png
+   :alt: Diff mode
+
+   Diff mode
+
 
 Installation
 ------------
@@ -35,6 +47,7 @@ append line:
    ...
 
 to make it permanent.
+
 
 License
 -------
