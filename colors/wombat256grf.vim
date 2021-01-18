@@ -1,6 +1,6 @@
 " Vim color file
 " Maintainer: Roman 'gryf' Dobosz
-" Last Change: 2017-05-30
+" Last Change: 2021-01-18
 "
 " wombat256grf.vim - a modified version of Wombat by Lars Nielsen (at al) that
 " also works on xterms with 88 or 256 colors. Instead of hard coding colors
@@ -24,41 +24,34 @@ if !has("gui_running") && &t_Co != 88 && &t_Co != 256
 endif
 
 " functions {{{
+" helper function for numerical sorting.
+function s:sort_ints(a, b)
+    let l:a = str2nr(a:a)
+    let l:b = str2nr(a:b)
+    return l:a == l:b ? 0 : l:a > l:b ? 1 : -1
+endfunction
+
 " returns an approximate grey index for the given grey level
-fun <SID>grey_number(x)
+fun s:get_approximate_grey_idx(x)
     if &t_Co == 88
-        if a:x < 23
-            return 0
-        elseif a:x < 69
-            return 1
-        elseif a:x < 103
-            return 2
-        elseif a:x < 127
-            return 3
-        elseif a:x < 150
-            return 4
-        elseif a:x < 173
-            return 5
-        elseif a:x < 196
-            return 6
-        elseif a:x < 219
-            return 7
-        elseif a:x < 243
-            return 8
-        else
-            return 9
-        endif
+        let l:grey_map = {23: 0, 69: 1, 103: 2, 127: 3, 150: 4, 173: 5, 196: 6,
+                    \219: 7, 243: 8}
+        for i in sort(keys(l:grey_map), "s:sort_ints")
+            if a:x < i
+                return l:grey_map[i]
+            endif
+        endfor
+        return 9
     else
         if a:x < 14
             return 0
+        endif
+        let l:n = (a:x - 8) / 10
+        let l:m = (a:x - 8) % 10
+        if l:m < 5
+            return l:n
         else
-            let l:n = (a:x - 8) / 10
-            let l:m = (a:x - 8) % 10
-            if l:m < 5
-                return l:n
-            else
-                return l:n + 1
-            endif
+            return l:n + 1
         endif
     endif
 endfun
@@ -177,9 +170,9 @@ endfun
 " returns the palette index to approximate the given R/G/B color levels
 fun <SID>color(r, g, b)
     " get the closest grey
-    let l:gx = <SID>grey_number(a:r)
-    let l:gy = <SID>grey_number(a:g)
-    let l:gz = <SID>grey_number(a:b)
+    let l:gx = s:get_approximate_grey_idx(a:r)
+    let l:gy = s:get_approximate_grey_idx(a:g)
+    let l:gz = s:get_approximate_grey_idx(a:b)
 
     " get the closest color
     let l:x = <SID>rgb_number(a:r)
@@ -379,9 +372,9 @@ delf <SID>color
 delf <SID>rgb_color
 delf <SID>rgb_level
 delf <SID>rgb_number
-delf <SID>grey_color
-delf <SID>grey_level
-delf <SID>grey_number
+delf <SID>get_grey_color_idx
+delf <SID>get_grey_level
+delf s:get_approximate_grey_idx
 " }}}
 
 " vim:set ts=4 sw=4 sts=4 fdm=marker:
