@@ -57,36 +57,13 @@ fun s:get_approximate_grey_idx(x)
 endfun
 
 " returns the actual grey level represented by the grey index
-fun <SID>grey_level(n)
+fun s:get_grey_level(n)
     if &t_Co == 88
-        if a:n == 0
-            return 0
-        elseif a:n == 1
-            return 46
-        elseif a:n == 2
-            return 92
-        elseif a:n == 3
-            return 115
-        elseif a:n == 4
-            return 139
-        elseif a:n == 5
-            return 162
-        elseif a:n == 6
-            return 185
-        elseif a:n == 7
-            return 208
-        elseif a:n == 8
-            return 231
-        else
-            return 255
-        endif
-    else
-        if a:n == 0
-            return 0
-        else
-            return 8 + (a:n * 10)
-        endif
+        let l:grey_map = {0: 0, 1: 46, 2: 92, 3: 115, 4: 139, 5: 162, 6: 185,
+                    \7: 208, 8: 231, 9: 255}
+        return get(l:grey_map, a:n)
     endif
+    return a:n == 0 ? 0 : 8 + (a:n * 10)
 endfun
 
 " returns the palette index for the given grey index
@@ -181,9 +158,9 @@ fun <SID>color(r, g, b)
 
     if l:gx == l:gy && l:gy == l:gz
         " there are two possibilities
-        let l:dgr = <SID>grey_level(l:gx) - a:r
-        let l:dgg = <SID>grey_level(l:gy) - a:g
-        let l:dgb = <SID>grey_level(l:gz) - a:b
+        let l:dgr = s:get_grey_level(l:gx) - a:r
+        let l:dgg = s:get_grey_level(l:gy) - a:g
+        let l:dgb = s:get_grey_level(l:gz) - a:b
         let l:dgrey = (l:dgr * l:dgr) + (l:dgg * l:dgg) + (l:dgb * l:dgb)
         let l:dr = <SID>rgb_level(l:gx) - a:r
         let l:dg = <SID>rgb_level(l:gy) - a:g
@@ -373,7 +350,7 @@ delf <SID>rgb_color
 delf <SID>rgb_level
 delf <SID>rgb_number
 delf <SID>get_grey_color_idx
-delf <SID>get_grey_level
+delf s:get_grey_level
 delf s:get_approximate_grey_idx
 " }}}
 
