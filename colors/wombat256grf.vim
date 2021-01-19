@@ -180,14 +180,13 @@ fun s:highlight(group, fg, bg, attr)
 endfun
 
 " same as above, but makes it for the spell-like things
-fun <SID>Y(group, bg)
-    if ! has('gui_running')
-        if a:bg != ""
-            exec "hi ".a:group." ctermbg=".s:get_rgb_as_index(a:bg)
-        endif
-    else
-        if a:bg != ""
-            exec "hi ".a:group." guisp=#".a:bg." gui=undercurl"
+fun s:undercurl(group, bg)
+    if a:bg != ""
+        if ! has('gui_running')
+            exec "highlight " . a:group . " ctermbg=" . 
+                        \s:get_rgb_as_index(a:bg)
+        else
+            exec "highlight " . a:group . " guisp=#" . a:bg . " gui=undercurl"
         endif
     endif
 endfun
@@ -292,10 +291,10 @@ call s:highlight("DiffChange", "", "53402d", "bold")
 " Spellchek
 if  version > 700
     " spell, make it underline, and less bright colors. only for terminal
-    call <SID>Y("SpellBad", "881000")
-    call <SID>Y("SpellCap", "003288")
-    call <SID>Y("SpellRare", "73009F")
-    call <SID>Y("SpellLocal", "A0CC00")
+    call s:undercurl("SpellBad", "881000")
+    call s:undercurl("SpellCap", "003288")
+    call s:undercurl("SpellRare", "73009F")
+    call s:undercurl("SpellLocal", "A0CC00")
 endif
 
 " Plugins:
@@ -306,10 +305,10 @@ call s:highlight("ShowMarksHLo", "42ab47", "121212", "bold")
 call s:highlight("ShowMarksHLm", "aaab42", "121212", "bold")
 
 " Syntastic
-call <SID>Y("SyntasticError ", "880000")
-call <SID>Y("SyntasticWarning", "886600")
-call <SID>Y("SyntasticStyleError", "ff6600")
-call <SID>Y("SyntasticStyleWarning", "ffaa00")
+call s:undercurl("SyntasticError ", "880000")
+call s:undercurl("SyntasticWarning", "886600")
+call s:undercurl("SyntasticStyleError", "ff6600")
+call s:undercurl("SyntasticStyleWarning", "ffaa00")
 call s:highlight("SyntasticErrorSign", "", "880000", "")
 call s:highlight("SyntasticWarningSign", "", "886600", "")
 call s:highlight("SyntasticStyleErrorSign", "", "ff6600", "")
@@ -317,7 +316,7 @@ call s:highlight("SyntasticStyleWarningSign", "", "ffaa00", "")
 
 
 " delete functions {{{
-delf <SID>Y
+delf s:undercurl
 delf s:highlight
 delf s:get_rgb_as_index
 delf s:get_color
