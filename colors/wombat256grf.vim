@@ -120,7 +120,7 @@ fun s:get_rgb_idx(x, y, z)
 endfun
 
 " returns the palette index to approximate the given R/G/B color levels
-fun <SID>color(r, g, b)
+fun s:get_color(r, g, b)
     " get the closest grey
     let l:gx = s:get_approximate_grey_idx(a:r)
     let l:gy = s:get_approximate_grey_idx(a:g)
@@ -144,14 +144,12 @@ fun <SID>color(r, g, b)
         if l:dgrey < l:drgb
             " use the grey
             return s:get_grey_color_idx(l:gx)
-        else
-            " use the color
-            return s:get_rgb_idx(l:x, l:y, l:z)
         endif
-    else
-        " only one possibility
+        " use the color
         return s:get_rgb_idx(l:x, l:y, l:z)
     endif
+    " only one possibility
+    return s:get_rgb_idx(l:x, l:y, l:z)
 endfun
 
 " returns the palette index to approximate the 'rrggbb' hex string
@@ -159,7 +157,7 @@ fun <SID>rgb(rgb)
     let l:r = ("0x" . strpart(a:rgb, 0, 2)) + 0
     let l:g = ("0x" . strpart(a:rgb, 2, 2)) + 0
     let l:b = ("0x" . strpart(a:rgb, 4, 2)) + 0
-    return <SID>color(l:r, l:g, l:b)
+    return s:get_color(l:r, l:g, l:b)
 endfun
 
 " sets the highlighting for the given group
@@ -320,7 +318,7 @@ call <SID>X("SyntasticStyleWarningSign", "", "ffaa00", "")
 delf <SID>Y
 delf <SID>X
 delf <SID>rgb
-delf <SID>color
+delf s:get_color
 delf s:get_rgb_idx
 delf s:get_rgb_level
 delf s:get_approximate_rgb_idx
