@@ -1,11 +1,11 @@
 " Vim color file
 " Maintainer: Roman 'gryf' Dobosz
-" Last Change: 2021-01-18
+" Last Change: 2021-01-19
 "
 " wombat256grf.vim - a modified version of Wombat by Lars Nielsen (at al) that
-" also works on xterms with 88 or 256 colors. Instead of hard coding colors
-" for the terminal, algorithm for approximating the GUI colors with the xterm
-" palette was used. Approximation function was taken from desert256.vim by
+" also works on xterms with 256 colors. Instead of hard coding colors for the
+" terminal, algorithm for approximating the GUI colors with the xterm palette
+" was used. Approximation function was taken from desert256.vim by
 " Henry So Jr.
 
 set background=dark
@@ -19,31 +19,13 @@ endif
 
 let g:colors_name = "wombat256grf"
 
-if !has("gui_running") && &t_Co != 88 && &t_Co != 256
+if !has("gui_running") && &t_Co != 256
     finish
 endif
 
 " functions {{{
-" helper function for numerical sorting.
-function s:sort_ints(a, b)
-    let l:a = str2nr(a:a)
-    let l:b = str2nr(a:b)
-    return l:a == l:b ? 0 : l:a > l:b ? 1 : -1
-endfunction
-
 " returns an approximate grey index for the given grey level
 fun s:get_approximate_grey_idx(x)
-    if &t_Co == 88
-        let l:grey_map = {23: 0, 69: 1, 103: 2, 127: 3, 150: 4, 173: 5, 196: 6,
-                    \219: 7, 243: 8}
-        for i in sort(keys(l:grey_map), "s:sort_ints")
-            if a:x < i
-                return l:grey_map[i]
-            endif
-        endfor
-        return 9
-    endif
-
     if a:x < 14
         return 0
     endif
@@ -57,11 +39,6 @@ endfun
 
 " returns the actual grey level represented by the grey index
 fun s:get_grey_level(n)
-    if &t_Co == 88
-        let l:grey_map = {0: 0, 1: 46, 2: 92, 3: 115, 4: 139, 5: 162, 6: 185,
-                    \7: 208, 8: 231, 9: 255}
-        return get(l:grey_map, a:n)
-    endif
     return a:n == 0 ? 0 : 8 + (a:n * 10)
 endfun
 
@@ -70,26 +47,11 @@ fun s:get_grey_color_idx(n)
     let l:grey_map = {0: 16, 25: 231}
     let l:default = 231 + a:n
 
-    if &t_Co == 88
-        let l:grey_map = {0: 16, 9: 79}
-        let l:default = 79 + a:n
-    endif
-
     return get(l:grey_map, a:n, l:default)
 endfun
 
 " returns an approximate color index for the given color level
 fun s:get_approximate_rgb_idx(x)
-    if &t_Co == 88
-        let l:rgb_map = {69: 0, 172: 1, 230: 2}
-        for i in sort(keys(l:rgb_map), "s:sort_ints")
-            if a:x < i
-                return l:rgb_map[i]
-            endif
-        endfor
-        return 3
-    endif
-
     if a:x < 75
         return 0
     endif
@@ -104,17 +66,11 @@ endfun
 
 " returns the actual color level for the given color index
 fun s:get_rgb_level(n)
-    if &t_Co == 88
-        return get({0: 0, 1: 139, 2: 205}, a:n, 255)
-    endif
     return a:n == 0 ? 0 : 55 + (a:n * 40)
 endfun
 
 " returns the palette index for the given R/G/B color indices
 fun s:get_rgb_idx(x, y, z)
-    if &t_Co == 88
-        return 16 + (a:x * 16) + (a:y * 4) + a:z
-    endif
     return 16 + (a:x * 36) + (a:y * 6) + a:z
 endfun
 
@@ -182,7 +138,7 @@ endfun
 fun s:undercurl(group, bg)
     if a:bg != ""
         if ! has('gui_running')
-            exec "highlight " . a:group . " ctermbg=" . 
+            exec "highlight " . a:group . " ctermbg=" .
                         \s:get_rgb_as_index(a:bg)
         else
             exec "highlight " . a:group . " guisp=#" . a:bg . " gui=undercurl"
@@ -323,7 +279,6 @@ delf s:get_approximate_rgb_idx
 delf s:get_grey_color_idx
 delf s:get_grey_level
 delf s:get_approximate_grey_idx
-delf s:sort_ints
 " }}}
 
 " vim:set ts=4 sw=4 sts=4 fdm=marker:
