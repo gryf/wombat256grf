@@ -37,10 +37,7 @@ fun s:get_approximate_grey_idx(x)
     endif
     let l:n = (a:x - 8) / 10
     let l:m = (a:x - 8) % 10
-    if l:m < 5
-        return l:n
-    endif
-    return l:n + 1
+    return l:m <5 ? l:n : l:n + 1
 endfun
 
 " Returns the actual grey level represented by the grey index.
@@ -52,7 +49,6 @@ endfun
 fun s:get_grey_color_idx(n)
     let l:grey_map = {0: 16, 25: 231}
     let l:default = 231 + a:n
-
     return get(l:grey_map, a:n, l:default)
 endfun
 
@@ -61,13 +57,9 @@ fun s:get_approximate_rgb_idx(x)
     if a:x < 75
         return 0
     endif
-
     let l:n = (a:x - 55) / 40
     let l:m = (a:x - 55) % 40
-    if l:m < 20
-        return l:n
-    endif
-    return l:n + 1
+    return l:m < 20 ? l:n : l:n + 1
 endfun
 
 " Returns the actual color level for the given color index.
@@ -122,102 +114,102 @@ fun s:get_rgb_as_index(rgb)
 endfun
 
 " Sets the highlighting for the given group. 
-fun s:hi(group, fg, bg, attr)
+fun s:hi(group, fg, bg, attr, special)
     let l:cmd = "highlight " . a:group
     if a:fg != ""
         let l:cmd .= " guifg=#" . a:fg . " ctermfg=" . s:get_rgb_as_index(a:fg)
     endif
+
     if a:bg != ""
-        let l:cmd .= " guibg=#" . a:bg . " ctermbg=" . s:get_rgb_as_index(a:bg)
+        if a:special != ""
+            let l:cmd .= " guisp=#" . a:bg . " ctermbg=" . 
+                        \s:get_rgb_as_index(a:bg) . " gui=" . a:special
+        else
+            let l:cmd .= " guibg=#" . a:bg . " ctermbg=" . 
+                        \s:get_rgb_as_index(a:bg)
+        endif
     endif
+
     if a:attr != ""
         if a:attr == 'italic'
             let l:cmd .= " gui=" . a:attr . " cterm=none"
         else
-            let l:cmd .= " gui=". a:attr. " cterm=" . a:attr
+            let l:cmd .= " gui=" . a:attr . " cterm=" . a:attr
         endif
     endif
-    exec l:cmd
-endfun
 
-" same as above, but makes it for the spell-like things
-fun s:undercurl(group, bg)
-    if a:bg != ""
-        if ! has('gui_running')
-            exec "highlight " . a:group . " ctermbg=" .
-                        \s:get_rgb_as_index(a:bg)
-        else
-            exec "highlight " . a:group . " guisp=#" . a:bg . " gui=undercurl"
-        endif
-    endif
+    exec l:cmd
 endfun
 " }}}
 
 " Colors {{{
+" should be in format (columns should be preserved):                    
+" call s:hi('Group name',   'fg rgb', 'bg rgb', 'attr',   'special')
+"
 " non-syntax items, interface, etc
-call s:hi("Normal",       "dddddd",   "242424",   "none")
-call s:hi("NonText",      "4c4c36",   "",         "none")
-call s:hi("Cursor",       "222222",   "ecee90",   "none")
 
-call s:hi("CursorLine",   "", "32322e",   "none")
+call s:hi("Normal",       "dddddd", "242424", "none",   "")
+call s:hi("NonText",      "4c4c36", "",       "none",   "")
+call s:hi("Cursor",       "222222", "ecee90", "none",   "")
+
+call s:hi("CursorLine",   "",       "32322e", "none",   "")
 hi link CursorColumn CursorLine
-call s:hi("ColorColumn", "", "2d2d2d", "")
+call s:hi("ColorColumn",  "",       "2d2d2d", "",       "")
 
-call s:hi("Search",       "444444",   "ffab4b",   "")
-call s:hi("MatchParen",   "ecee90",   "857b6f",   "bold")
-call s:hi("SpecialKey",   "6c6c6c",   "2d2d2d",   "none")
-call s:hi("Visual",       "", "26512D",   "none")
-call s:hi("LineNr",       "857b6f",   "121212",   "none")
-call s:hi("SignColumn",   "", "121212",   "none")
-call s:hi("Folded",       "a0a8b0",   "404048",   "none")
-call s:hi("Title",        "f6f3e8",   "",         "bold")
-call s:hi("VertSplit",    "444444",   "444444",   "none")
-call s:hi("StatusLine",   "f6f3e8",   "444444",   s:italic)
-call s:hi("StatusLineNC", "857b6f",   "444444",   "none")
-call s:hi("Pmenu",        "f6f3e8",   "444444",   "")
-call s:hi("PmenuSel",     "121212",   "caeb82",   "")
-call s:hi("WarningMsg",   "ff0000",   "",         "")
+call s:hi("Search",       "444444", "ffab4b", "",       "")
+call s:hi("MatchParen",   "ecee90", "857b6f", "bold",   "")
+call s:hi("SpecialKey",   "6c6c6c", "2d2d2d", "none",   "")
+call s:hi("Visual",       "",       "26512D", "none",   "")
+call s:hi("LineNr",       "857b6f", "121212", "none",   "")
+call s:hi("SignColumn",   "",       "121212", "none",   "")
+call s:hi("Folded",       "a0a8b0", "404048", "none",   "")
+call s:hi("Title",        "f6f3e8", "",       "bold",   "")
+call s:hi("VertSplit",    "444444", "444444", "none",   "")
+call s:hi("StatusLine",   "f6f3e8", "444444", s:italic, "")
+call s:hi("StatusLineNC", "857b6f", "444444", "none",   "")
+call s:hi("Pmenu",        "f6f3e8", "444444", "",       "")
+call s:hi("PmenuSel",     "121212", "caeb82", "",       "")
+call s:hi("WarningMsg",   "ff0000", "",       "",       "")
 
 hi! link VisualNOS  Visual
 hi! link FoldColumn Folded
 hi! link TabLineSel StatusLine
 hi! link TabLineFill StatusLineNC
 hi! link TabLine StatusLineNC
-call s:hi("TabLineSel", "f6f3e8", "", "none")
+call s:hi("TabLineSel",   "f6f3e8", "",       "none",   "")
 
 " syntax highlighting
-call s:hi("Comment",      "99968b",   "",         s:italic)
-
-call s:hi("Constant",     "e5786d",   "",         "none")
-call s:hi("String",       "95e454",   "",         s:italic)
+call s:hi("Comment",      "99968b", "",       s:italic, "")
+call s:hi("Constant",     "e5786d", "",       "none",   "")
+call s:hi("String",       "95e454", "",       s:italic, "")
 "Character
 "Number
 "Boolean
 "Float
 
-call s:hi("Identifier",   "caeb82",   "",         "none")
-call s:hi("Function",     "caeb82",   "",         "none")
+call s:hi("Identifier",   "caeb82", "",       "none",   "")
+call s:hi("Function",     "caeb82", "",       "none",   "")
 
-call s:hi("Statement",    "87afff",   "",         "none")
+call s:hi("Statement",    "87afff", "",       "none",   "")
 "Conditional
 "Repeat
 "Label
 "Operator
-call s:hi("Keyword",      "87afff",   "",         "none")
+call s:hi("Keyword",      "87afff", "",       "none",   "")
 "Exception
 
-call s:hi("PreProc",      "e5786d",   "",         "none")
+call s:hi("PreProc",      "e5786d", "",       "none",   "")
 "Include
 "Define
 "Macro
 "PreCondit
 
-call s:hi("Type",         "caeb82",   "",         "none")
+call s:hi("Type",         "caeb82", "",       "none",   "")
 "StorageClass
 "Structure
 "Typedef
 
-call s:hi("Special",      "ffdead",   "",         "none")
+call s:hi("Special",      "ffdead", "",       "none",   "")
 "SpecialChar
 "Tag
 "Delimiter
@@ -228,43 +220,42 @@ call s:hi("Special",      "ffdead",   "",         "none")
 
 "Ignore
 
-call s:hi("Error", "bbbbbb", "aa0000", s:italic)
+call s:hi("Error",        "bbbbbb", "aa0000", s:italic, "")
 
-call s:hi("Todo", "666666", "aaaa00", s:italic)
+call s:hi("Todo",         "666666", "aaaa00", s:italic, "")
 
 " Diff
-call s:hi("DiffAdd", "", "505450", "bold")
-call s:hi("DiffText", "", "673400", "bold")
-call s:hi("DiffDelete", "343434", "101010", "bold")
-call s:hi("DiffChange", "", "53402d", "bold")
+call s:hi("DiffAdd",      "",       "505450", "bold",   "")
+call s:hi("DiffText",     "",       "673400", "bold",   "")
+call s:hi("DiffDelete",   "343434", "101010", "bold",   "")
+call s:hi("DiffChange",   "",       "53402d", "bold",   "")
 
 " Spellchek
 " Spell, make it underline, and less bright colors. only for terminal
-call s:undercurl("SpellBad", "881000")
-call s:undercurl("SpellCap", "003288")
-call s:undercurl("SpellRare", "73009F")
-call s:undercurl("SpellLocal", "A0CC00")
+call s:hi("SpellBad",     "",       "881000", "",       "undercurl")
+call s:hi("SpellCap",     "",       "003288", "",       "undercurl")
+call s:hi("SpellRare",    "",       "73009F", "",       "undercurl")
+call s:hi("SpellLocal",   "",       "A0CC00", "",       "undercurl")
 
 " Plugins:
 " ShowMarks
-call s:hi("ShowMarksHLl", "ab8042", "121212", "bold")
-call s:hi("ShowMarksHLu", "aaab42", "121212", "bold")
-call s:hi("ShowMarksHLo", "42ab47", "121212", "bold")
-call s:hi("ShowMarksHLm", "aaab42", "121212", "bold")
+call s:hi("ShowMarksHLl", "ab8042", "121212", "bold",   "")
+call s:hi("ShowMarksHLu", "aaab42", "121212", "bold",   "")
+call s:hi("ShowMarksHLo", "42ab47", "121212", "bold",   "")
+call s:hi("ShowMarksHLm", "aaab42", "121212", "bold",   "")
 
 " Syntastic
-call s:undercurl("SyntasticError ", "880000")
-call s:undercurl("SyntasticWarning", "886600")
-call s:undercurl("SyntasticStyleError", "ff6600")
-call s:undercurl("SyntasticStyleWarning", "ffaa00")
-call s:hi("SyntasticErrorSign", "", "880000", "")
-call s:hi("SyntasticWarningSign", "", "886600", "")
-call s:hi("SyntasticStyleErrorSign", "", "ff6600", "")
-call s:hi("SyntasticStyleWarningSign", "", "ffaa00", "")
+call s:hi("SyntasticError",            "", "880000", "", "undercurl")
+call s:hi("SyntasticWarning",          "", "886600", "", "undercurl")
+call s:hi("SyntasticStyleError",       "", "ff6600", "", "undercurl")
+call s:hi("SyntasticStyleWarning",     "", "ffaa00", "", "undercurl")
+call s:hi("SyntasticErrorSign",        "", "880000", "", "")
+call s:hi("SyntasticWarningSign",      "", "886600", "", "")
+call s:hi("SyntasticStyleErrorSign",   "", "ff6600", "", "")
+call s:hi("SyntasticStyleWarningSign", "", "ffaa00", "", "")
 " }}}
 
 " delete functions {{{
-delf s:undercurl
 delf s:hi
 delf s:get_rgb_as_index
 delf s:get_color
