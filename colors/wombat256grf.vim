@@ -10,11 +10,9 @@
 
 set background=dark
 
-if version > 580
-    hi clear
-    if exists("syntax_on")
-        syntax reset
-    endif
+hi clear
+if exists("syntax_on")
+    syntax reset
 endif
 
 let g:colors_name = "wombat256grf"
@@ -161,13 +159,9 @@ call s:highlight("Normal",       "dddddd",   "242424",   "none")
 call s:highlight("NonText",      "4c4c36",   "",         "none")
 call s:highlight("Cursor",       "222222",   "ecee90",   "none")
 
-if version > 700
-    call s:highlight("CursorLine",   "", "32322e",   "none")
-    hi link CursorColumn CursorLine
-    if version > 703
-        call s:highlight("ColorColumn", "", "2d2d2d", "")
-    endif
-endif
+call s:highlight("CursorLine",   "", "32322e",   "none")
+hi link CursorColumn CursorLine
+call s:highlight("ColorColumn", "", "2d2d2d", "")
 
 call s:highlight("Search",       "444444",   "ffab4b",   "")
 call s:highlight("MatchParen",   "ecee90",   "857b6f",   "bold")
@@ -245,13 +239,11 @@ call s:highlight("DiffDelete", "343434", "101010", "bold")
 call s:highlight("DiffChange", "", "53402d", "bold")
 
 " Spellchek
-if  version > 700
-    " spell, make it underline, and less bright colors. only for terminal
-    call s:undercurl("SpellBad", "881000")
-    call s:undercurl("SpellCap", "003288")
-    call s:undercurl("SpellRare", "73009F")
-    call s:undercurl("SpellLocal", "A0CC00")
-endif
+" Spell, make it underline, and less bright colors. only for terminal
+call s:undercurl("SpellBad", "881000")
+call s:undercurl("SpellCap", "003288")
+call s:undercurl("SpellRare", "73009F")
+call s:undercurl("SpellLocal", "A0CC00")
 
 " Plugins:
 " ShowMarks
