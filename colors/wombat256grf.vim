@@ -153,7 +153,7 @@ fun s:get_color(r, g, b)
 endfun
 
 " returns the palette index to approximate the 'rrggbb' hex string
-fun <SID>rgb(rgb)
+fun s:get_rgb_as_index(rgb)
     let l:r = ("0x" . strpart(a:rgb, 0, 2)) + 0
     let l:g = ("0x" . strpart(a:rgb, 2, 2)) + 0
     let l:b = ("0x" . strpart(a:rgb, 4, 2)) + 0
@@ -163,10 +163,10 @@ endfun
 " sets the highlighting for the given group
 fun <SID>X(group, fg, bg, attr)
     if a:fg != ""
-        exec "hi ".a:group." guifg=#".a:fg." ctermfg=".<SID>rgb(a:fg)
+        exec "hi ".a:group." guifg=#".a:fg." ctermfg=".s:get_rgb_as_index(a:fg)
     endif
     if a:bg != ""
-        exec "hi ".a:group." guibg=#".a:bg." ctermbg=".<SID>rgb(a:bg)
+        exec "hi ".a:group." guibg=#".a:bg." ctermbg=".s:get_rgb_as_index(a:bg)
     endif
     if a:attr != ""
         if a:attr == 'italic'
@@ -181,7 +181,7 @@ endfun
 fun <SID>Y(group, bg)
     if ! has('gui_running')
         if a:bg != ""
-            exec "hi ".a:group." ctermbg=".<SID>rgb(a:bg)
+            exec "hi ".a:group." ctermbg=".s:get_rgb_as_index(a:bg)
         endif
     else
         if a:bg != ""
@@ -317,7 +317,7 @@ call <SID>X("SyntasticStyleWarningSign", "", "ffaa00", "")
 " delete functions {{{
 delf <SID>Y
 delf <SID>X
-delf <SID>rgb
+delf s:get_rgb_as_index
 delf s:get_color
 delf s:get_rgb_idx
 delf s:get_rgb_level
