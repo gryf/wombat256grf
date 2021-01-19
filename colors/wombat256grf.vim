@@ -67,24 +67,16 @@ fun s:get_grey_level(n)
 endfun
 
 " returns the palette index for the given grey index
-fun <SID>grey_color(n)
+fun s:get_grey_color_idx(n)
+    let l:grey_map = {0: 16, 25: 231}
+    let l:default = 231 + a:n
+
     if &t_Co == 88
-        if a:n == 0
-            return 16
-        elseif a:n == 9
-            return 79
-        else
-            return 79 + a:n
-        endif
-    else
-        if a:n == 0
-            return 16
-        elseif a:n == 25
-            return 231
-        else
-            return 231 + a:n
-        endif
+        let l:grey_map = {0: 16, 9: 79}
+        let l:default = 79 + a:n
     endif
+
+    return get(l:grey_map, a:n, l:default)
 endfun
 
 " returns an approximate color index for the given color level
@@ -168,7 +160,7 @@ fun <SID>color(r, g, b)
         let l:drgb = (l:dr * l:dr) + (l:dg * l:dg) + (l:db * l:db)
         if l:dgrey < l:drgb
             " use the grey
-            return <SID>grey_color(l:gx)
+            return s:get_grey_color_idx(l:gx)
         else
             " use the color
             return <SID>rgb_color(l:x, l:y, l:z)
@@ -349,7 +341,7 @@ delf <SID>color
 delf <SID>rgb_color
 delf <SID>rgb_level
 delf <SID>rgb_number
-delf <SID>get_grey_color_idx
+delf s:get_grey_color_idx
 delf s:get_grey_level
 delf s:get_approximate_grey_idx
 " }}}
