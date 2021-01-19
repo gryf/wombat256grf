@@ -80,30 +80,27 @@ fun s:get_grey_color_idx(n)
 endfun
 
 " returns an approximate color index for the given color level
-fun <SID>rgb_number(x)
+fun s:get_approximate_rgb_idx(x)
     if &t_Co == 88
-        if a:x < 69
-            return 0
-        elseif a:x < 172
-            return 1
-        elseif a:x < 230
-            return 2
-        else
-            return 3
-        endif
-    else
-        if a:x < 75
-            return 0
-        else
-            let l:n = (a:x - 55) / 40
-            let l:m = (a:x - 55) % 40
-            if l:m < 20
-                return l:n
-            else
-                return l:n + 1
+        let l:rgb_map = {69: 0, 172: 1, 230: 2}
+        for i in sort(keys(l:rgb_map), "s:sort_ints")
+            if a:x < i
+                return l:rgb_map[i]
             endif
-        endif
+        endfor
+        return 3
     endif
+
+    if a:x < 75
+        return 0
+    endif
+
+    let l:n = (a:x - 55) / 40
+    let l:m = (a:x - 55) % 40
+    if l:m < 20
+        return l:n
+    endif
+    return l:n + 1
 endfun
 
 " returns the actual color level for the given color index
@@ -144,9 +141,9 @@ fun <SID>color(r, g, b)
     let l:gz = s:get_approximate_grey_idx(a:b)
 
     " get the closest color
-    let l:x = <SID>rgb_number(a:r)
-    let l:y = <SID>rgb_number(a:g)
-    let l:z = <SID>rgb_number(a:b)
+    let l:x = s:get_approximate_rgb_idx(a:r)
+    let l:y = s:get_approximate_rgb_idx(a:g)
+    let l:z = s:get_approximate_rgb_idx(a:b)
 
     if l:gx == l:gy && l:gy == l:gz
         " there are two possibilities
@@ -340,7 +337,7 @@ delf <SID>rgb
 delf <SID>color
 delf <SID>rgb_color
 delf <SID>rgb_level
-delf <SID>rgb_number
+delf s:get_approximate_rgb_idx
 delf s:get_grey_color_idx
 delf s:get_grey_level
 delf s:get_approximate_grey_idx
