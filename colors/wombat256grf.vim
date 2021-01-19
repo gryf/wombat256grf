@@ -112,12 +112,11 @@ fun s:get_rgb_level(n)
 endfun
 
 " returns the palette index for the given R/G/B color indices
-fun <SID>rgb_color(x, y, z)
+fun s:get_rgb_idx(x, y, z)
     if &t_Co == 88
         return 16 + (a:x * 16) + (a:y * 4) + a:z
-    else
-        return 16 + (a:x * 36) + (a:y * 6) + a:z
     endif
+    return 16 + (a:x * 36) + (a:y * 6) + a:z
 endfun
 
 " returns the palette index to approximate the given R/G/B color levels
@@ -147,11 +146,11 @@ fun <SID>color(r, g, b)
             return s:get_grey_color_idx(l:gx)
         else
             " use the color
-            return <SID>rgb_color(l:x, l:y, l:z)
+            return s:get_rgb_idx(l:x, l:y, l:z)
         endif
     else
         " only one possibility
-        return <SID>rgb_color(l:x, l:y, l:z)
+        return s:get_rgb_idx(l:x, l:y, l:z)
     endif
 endfun
 
@@ -322,7 +321,7 @@ delf <SID>Y
 delf <SID>X
 delf <SID>rgb
 delf <SID>color
-delf <SID>rgb_color
+delf s:get_rgb_idx
 delf s:get_rgb_level
 delf s:get_approximate_rgb_idx
 delf s:get_grey_color_idx
