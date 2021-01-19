@@ -104,24 +104,11 @@ fun s:get_approximate_rgb_idx(x)
 endfun
 
 " returns the actual color level for the given color index
-fun <SID>rgb_level(n)
+fun s:get_rgb_level(n)
     if &t_Co == 88
-        if a:n == 0
-            return 0
-        elseif a:n == 1
-            return 139
-        elseif a:n == 2
-            return 205
-        else
-            return 255
-        endif
-    else
-        if a:n == 0
-            return 0
-        else
-            return 55 + (a:n * 40)
-        endif
+        return get({0: 0, 1: 139, 2: 205}, a:n, 255)
     endif
+    return a:n == 0 ? 0 : 55 + (a:n * 40)
 endfun
 
 " returns the palette index for the given R/G/B color indices
@@ -151,9 +138,9 @@ fun <SID>color(r, g, b)
         let l:dgg = s:get_grey_level(l:gy) - a:g
         let l:dgb = s:get_grey_level(l:gz) - a:b
         let l:dgrey = (l:dgr * l:dgr) + (l:dgg * l:dgg) + (l:dgb * l:dgb)
-        let l:dr = <SID>rgb_level(l:gx) - a:r
-        let l:dg = <SID>rgb_level(l:gy) - a:g
-        let l:db = <SID>rgb_level(l:gz) - a:b
+        let l:dr = s:get_rgb_level(l:gx) - a:r
+        let l:dg = s:get_rgb_level(l:gy) - a:g
+        let l:db = s:get_rgb_level(l:gz) - a:b
         let l:drgb = (l:dr * l:dr) + (l:dg * l:dg) + (l:db * l:db)
         if l:dgrey < l:drgb
             " use the grey
@@ -336,7 +323,7 @@ delf <SID>X
 delf <SID>rgb
 delf <SID>color
 delf <SID>rgb_color
-delf <SID>rgb_level
+delf s:get_rgb_level
 delf s:get_approximate_rgb_idx
 delf s:get_grey_color_idx
 delf s:get_grey_level
