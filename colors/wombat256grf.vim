@@ -161,20 +161,22 @@ fun s:get_rgb_as_index(rgb)
 endfun
 
 " sets the highlighting for the given group
-fun <SID>X(group, fg, bg, attr)
+fun s:highlight(group, fg, bg, attr)
+    let l:cmd = "highlight " . a:group
     if a:fg != ""
-        exec "hi ".a:group." guifg=#".a:fg." ctermfg=".s:get_rgb_as_index(a:fg)
+        let l:cmd .= " guifg=#" . a:fg . " ctermfg=" . s:get_rgb_as_index(a:fg)
     endif
     if a:bg != ""
-        exec "hi ".a:group." guibg=#".a:bg." ctermbg=".s:get_rgb_as_index(a:bg)
+        let l:cmd .= " guibg=#" . a:bg . " ctermbg=" . s:get_rgb_as_index(a:bg)
     endif
     if a:attr != ""
         if a:attr == 'italic'
-            exec "hi ".a:group." gui=".a:attr." cterm=none"
+            let l:cmd .= " gui=" . a:attr . " cterm=none"
         else
-            exec "hi ".a:group." gui=".a:attr." cterm=".a:attr
+            let l:cmd .= " gui=". a:attr. " cterm=" . a:attr
         endif
     endif
+    exec l:cmd
 endfun
 
 " same as above, but makes it for the spell-like things
@@ -199,75 +201,74 @@ else
 endif
 
 
-" X(fg, bg, attr)
 " non-syntax items, interface, etc
-call <SID>X("Normal",       "dddddd",   "242424",   "none")
-call <SID>X("NonText",      "4c4c36",   "",         "none")
-call <SID>X("Cursor",       "222222",   "ecee90",   "none")
+call s:highlight("Normal",       "dddddd",   "242424",   "none")
+call s:highlight("NonText",      "4c4c36",   "",         "none")
+call s:highlight("Cursor",       "222222",   "ecee90",   "none")
 
 if version > 700
-    call <SID>X("CursorLine",   "", "32322e",   "none")
+    call s:highlight("CursorLine",   "", "32322e",   "none")
     hi link CursorColumn CursorLine
     if version > 703
-        call <SID>X("ColorColumn", "", "2d2d2d", "")
+        call s:highlight("ColorColumn", "", "2d2d2d", "")
     endif
 endif
 
-call <SID>X("Search",       "444444",   "ffab4b",   "")
-call <SID>X("MatchParen",   "ecee90",   "857b6f",   "bold")
-call <SID>X("SpecialKey",   "6c6c6c",   "2d2d2d",   "none")
-call <SID>X("Visual",       "", "26512D",   "none")
-call <SID>X("LineNr",       "857b6f",   "121212",   "none")
-call <SID>X("SignColumn",   "", "121212",   "none")
-call <SID>X("Folded",       "a0a8b0",   "404048",   "none")
-call <SID>X("Title",        "f6f3e8",   "",         "bold")
-call <SID>X("VertSplit",    "444444",   "444444",   "none")
-call <SID>X("StatusLine",   "f6f3e8",   "444444",   s:italic)
-call <SID>X("StatusLineNC", "857b6f",   "444444",   "none")
-call <SID>X("Pmenu",        "f6f3e8",   "444444",   "")
-call <SID>X("PmenuSel",     "121212",   "caeb82",   "")
-call <SID>X("WarningMsg",   "ff0000",   "",         "")
+call s:highlight("Search",       "444444",   "ffab4b",   "")
+call s:highlight("MatchParen",   "ecee90",   "857b6f",   "bold")
+call s:highlight("SpecialKey",   "6c6c6c",   "2d2d2d",   "none")
+call s:highlight("Visual",       "", "26512D",   "none")
+call s:highlight("LineNr",       "857b6f",   "121212",   "none")
+call s:highlight("SignColumn",   "", "121212",   "none")
+call s:highlight("Folded",       "a0a8b0",   "404048",   "none")
+call s:highlight("Title",        "f6f3e8",   "",         "bold")
+call s:highlight("VertSplit",    "444444",   "444444",   "none")
+call s:highlight("StatusLine",   "f6f3e8",   "444444",   s:italic)
+call s:highlight("StatusLineNC", "857b6f",   "444444",   "none")
+call s:highlight("Pmenu",        "f6f3e8",   "444444",   "")
+call s:highlight("PmenuSel",     "121212",   "caeb82",   "")
+call s:highlight("WarningMsg",   "ff0000",   "",         "")
 
 hi! link VisualNOS  Visual
 hi! link FoldColumn Folded
 hi! link TabLineSel StatusLine
 hi! link TabLineFill StatusLineNC
 hi! link TabLine StatusLineNC
-call <SID>X("TabLineSel", "f6f3e8", "", "none")
+call s:highlight("TabLineSel", "f6f3e8", "", "none")
 
 " syntax highlighting
-call <SID>X("Comment",      "99968b",   "",         s:italic)
+call s:highlight("Comment",      "99968b",   "",         s:italic)
 
-call <SID>X("Constant",     "e5786d",   "",         "none")
-call <SID>X("String",       "95e454",   "",         s:italic)
+call s:highlight("Constant",     "e5786d",   "",         "none")
+call s:highlight("String",       "95e454",   "",         s:italic)
 "Character
 "Number
 "Boolean
 "Float
 
-call <SID>X("Identifier",   "caeb82",   "",         "none")
-call <SID>X("Function",     "caeb82",   "",         "none")
+call s:highlight("Identifier",   "caeb82",   "",         "none")
+call s:highlight("Function",     "caeb82",   "",         "none")
 
-call <SID>X("Statement",    "87afff",   "",         "none")
+call s:highlight("Statement",    "87afff",   "",         "none")
 "Conditional
 "Repeat
 "Label
 "Operator
-call <SID>X("Keyword",      "87afff",   "",         "none")
+call s:highlight("Keyword",      "87afff",   "",         "none")
 "Exception
 
-call <SID>X("PreProc",      "e5786d",   "",         "none")
+call s:highlight("PreProc",      "e5786d",   "",         "none")
 "Include
 "Define
 "Macro
 "PreCondit
 
-call <SID>X("Type",         "caeb82",   "",         "none")
+call s:highlight("Type",         "caeb82",   "",         "none")
 "StorageClass
 "Structure
 "Typedef
 
-call <SID>X("Special",      "ffdead",   "",         "none")
+call s:highlight("Special",      "ffdead",   "",         "none")
 "SpecialChar
 "Tag
 "Delimiter
@@ -278,15 +279,15 @@ call <SID>X("Special",      "ffdead",   "",         "none")
 
 "Ignore
 
-call <SID>X("Error", "bbbbbb", "aa0000", s:italic)
+call s:highlight("Error", "bbbbbb", "aa0000", s:italic)
 
-call <SID>X("Todo", "666666", "aaaa00", s:italic)
+call s:highlight("Todo", "666666", "aaaa00", s:italic)
 
 " Diff
-call <SID>X("DiffAdd", "", "505450", "bold")
-call <SID>X("DiffText", "", "673400", "bold")
-call <SID>X("DiffDelete", "343434", "101010", "bold")
-call <SID>X("DiffChange", "", "53402d", "bold")
+call s:highlight("DiffAdd", "", "505450", "bold")
+call s:highlight("DiffText", "", "673400", "bold")
+call s:highlight("DiffDelete", "343434", "101010", "bold")
+call s:highlight("DiffChange", "", "53402d", "bold")
 
 " Spellchek
 if  version > 700
@@ -299,24 +300,25 @@ endif
 
 " Plugins:
 " ShowMarks
-call <SID>X("ShowMarksHLl", "ab8042", "121212", "bold")
-call <SID>X("ShowMarksHLu", "aaab42", "121212", "bold")
-call <SID>X("ShowMarksHLo", "42ab47", "121212", "bold")
-call <SID>X("ShowMarksHLm", "aaab42", "121212", "bold")
+call s:highlight("ShowMarksHLl", "ab8042", "121212", "bold")
+call s:highlight("ShowMarksHLu", "aaab42", "121212", "bold")
+call s:highlight("ShowMarksHLo", "42ab47", "121212", "bold")
+call s:highlight("ShowMarksHLm", "aaab42", "121212", "bold")
 
 " Syntastic
 call <SID>Y("SyntasticError ", "880000")
 call <SID>Y("SyntasticWarning", "886600")
 call <SID>Y("SyntasticStyleError", "ff6600")
 call <SID>Y("SyntasticStyleWarning", "ffaa00")
-call <SID>X("SyntasticErrorSign", "", "880000", "")
-call <SID>X("SyntasticWarningSign", "", "886600", "")
-call <SID>X("SyntasticStyleErrorSign", "", "ff6600", "")
-call <SID>X("SyntasticStyleWarningSign", "", "ffaa00", "")
+call s:highlight("SyntasticErrorSign", "", "880000", "")
+call s:highlight("SyntasticWarningSign", "", "886600", "")
+call s:highlight("SyntasticStyleErrorSign", "", "ff6600", "")
+call s:highlight("SyntasticStyleWarningSign", "", "ffaa00", "")
+
 
 " delete functions {{{
 delf <SID>Y
-delf <SID>X
+delf s:highlight
 delf s:get_rgb_as_index
 delf s:get_color
 delf s:get_rgb_idx
