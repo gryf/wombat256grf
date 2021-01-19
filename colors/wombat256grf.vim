@@ -42,18 +42,17 @@ fun s:get_approximate_grey_idx(x)
             endif
         endfor
         return 9
-    else
-        if a:x < 14
-            return 0
-        endif
-        let l:n = (a:x - 8) / 10
-        let l:m = (a:x - 8) % 10
-        if l:m < 5
-            return l:n
-        else
-            return l:n + 1
-        endif
     endif
+
+    if a:x < 14
+        return 0
+    endif
+    let l:n = (a:x - 8) / 10
+    let l:m = (a:x - 8) % 10
+    if l:m < 5
+        return l:n
+    endif
+    return l:n + 1
 endfun
 
 " returns the actual grey level represented by the grey index
@@ -193,10 +192,9 @@ endfun
 " }}}
 
 " italic only in gui and only where font is not fixed-misc!
+let s:italic = "none"
 if has("gui_running") && &guifont !~ "Fixed"
     let s:italic = "italic"
-else
-    let s:italic = "none"
 endif
 
 
@@ -314,7 +312,6 @@ call s:highlight("SyntasticWarningSign", "", "886600", "")
 call s:highlight("SyntasticStyleErrorSign", "", "ff6600", "")
 call s:highlight("SyntasticStyleWarningSign", "", "ffaa00", "")
 
-
 " delete functions {{{
 delf s:undercurl
 delf s:highlight
@@ -326,6 +323,7 @@ delf s:get_approximate_rgb_idx
 delf s:get_grey_color_idx
 delf s:get_grey_level
 delf s:get_approximate_grey_idx
+delf s:sort_ints
 " }}}
 
 " vim:set ts=4 sw=4 sts=4 fdm=marker:
