@@ -122,7 +122,7 @@ fun s:get_rgb_as_index(rgb)
 endfun
 
 " Sets the highlighting for the given group. 
-fun s:highlight(group, fg, bg, attr)
+fun s:hi(group, fg, bg, attr)
     let l:cmd = "highlight " . a:group
     if a:fg != ""
         let l:cmd .= " guifg=#" . a:fg . " ctermfg=" . s:get_rgb_as_index(a:fg)
@@ -155,69 +155,69 @@ endfun
 
 " Colors {{{
 " non-syntax items, interface, etc
-call s:highlight("Normal",       "dddddd",   "242424",   "none")
-call s:highlight("NonText",      "4c4c36",   "",         "none")
-call s:highlight("Cursor",       "222222",   "ecee90",   "none")
+call s:hi("Normal",       "dddddd",   "242424",   "none")
+call s:hi("NonText",      "4c4c36",   "",         "none")
+call s:hi("Cursor",       "222222",   "ecee90",   "none")
 
-call s:highlight("CursorLine",   "", "32322e",   "none")
+call s:hi("CursorLine",   "", "32322e",   "none")
 hi link CursorColumn CursorLine
-call s:highlight("ColorColumn", "", "2d2d2d", "")
+call s:hi("ColorColumn", "", "2d2d2d", "")
 
-call s:highlight("Search",       "444444",   "ffab4b",   "")
-call s:highlight("MatchParen",   "ecee90",   "857b6f",   "bold")
-call s:highlight("SpecialKey",   "6c6c6c",   "2d2d2d",   "none")
-call s:highlight("Visual",       "", "26512D",   "none")
-call s:highlight("LineNr",       "857b6f",   "121212",   "none")
-call s:highlight("SignColumn",   "", "121212",   "none")
-call s:highlight("Folded",       "a0a8b0",   "404048",   "none")
-call s:highlight("Title",        "f6f3e8",   "",         "bold")
-call s:highlight("VertSplit",    "444444",   "444444",   "none")
-call s:highlight("StatusLine",   "f6f3e8",   "444444",   s:italic)
-call s:highlight("StatusLineNC", "857b6f",   "444444",   "none")
-call s:highlight("Pmenu",        "f6f3e8",   "444444",   "")
-call s:highlight("PmenuSel",     "121212",   "caeb82",   "")
-call s:highlight("WarningMsg",   "ff0000",   "",         "")
+call s:hi("Search",       "444444",   "ffab4b",   "")
+call s:hi("MatchParen",   "ecee90",   "857b6f",   "bold")
+call s:hi("SpecialKey",   "6c6c6c",   "2d2d2d",   "none")
+call s:hi("Visual",       "", "26512D",   "none")
+call s:hi("LineNr",       "857b6f",   "121212",   "none")
+call s:hi("SignColumn",   "", "121212",   "none")
+call s:hi("Folded",       "a0a8b0",   "404048",   "none")
+call s:hi("Title",        "f6f3e8",   "",         "bold")
+call s:hi("VertSplit",    "444444",   "444444",   "none")
+call s:hi("StatusLine",   "f6f3e8",   "444444",   s:italic)
+call s:hi("StatusLineNC", "857b6f",   "444444",   "none")
+call s:hi("Pmenu",        "f6f3e8",   "444444",   "")
+call s:hi("PmenuSel",     "121212",   "caeb82",   "")
+call s:hi("WarningMsg",   "ff0000",   "",         "")
 
 hi! link VisualNOS  Visual
 hi! link FoldColumn Folded
 hi! link TabLineSel StatusLine
 hi! link TabLineFill StatusLineNC
 hi! link TabLine StatusLineNC
-call s:highlight("TabLineSel", "f6f3e8", "", "none")
+call s:hi("TabLineSel", "f6f3e8", "", "none")
 
 " syntax highlighting
-call s:highlight("Comment",      "99968b",   "",         s:italic)
+call s:hi("Comment",      "99968b",   "",         s:italic)
 
-call s:highlight("Constant",     "e5786d",   "",         "none")
-call s:highlight("String",       "95e454",   "",         s:italic)
+call s:hi("Constant",     "e5786d",   "",         "none")
+call s:hi("String",       "95e454",   "",         s:italic)
 "Character
 "Number
 "Boolean
 "Float
 
-call s:highlight("Identifier",   "caeb82",   "",         "none")
-call s:highlight("Function",     "caeb82",   "",         "none")
+call s:hi("Identifier",   "caeb82",   "",         "none")
+call s:hi("Function",     "caeb82",   "",         "none")
 
-call s:highlight("Statement",    "87afff",   "",         "none")
+call s:hi("Statement",    "87afff",   "",         "none")
 "Conditional
 "Repeat
 "Label
 "Operator
-call s:highlight("Keyword",      "87afff",   "",         "none")
+call s:hi("Keyword",      "87afff",   "",         "none")
 "Exception
 
-call s:highlight("PreProc",      "e5786d",   "",         "none")
+call s:hi("PreProc",      "e5786d",   "",         "none")
 "Include
 "Define
 "Macro
 "PreCondit
 
-call s:highlight("Type",         "caeb82",   "",         "none")
+call s:hi("Type",         "caeb82",   "",         "none")
 "StorageClass
 "Structure
 "Typedef
 
-call s:highlight("Special",      "ffdead",   "",         "none")
+call s:hi("Special",      "ffdead",   "",         "none")
 "SpecialChar
 "Tag
 "Delimiter
@@ -228,15 +228,15 @@ call s:highlight("Special",      "ffdead",   "",         "none")
 
 "Ignore
 
-call s:highlight("Error", "bbbbbb", "aa0000", s:italic)
+call s:hi("Error", "bbbbbb", "aa0000", s:italic)
 
-call s:highlight("Todo", "666666", "aaaa00", s:italic)
+call s:hi("Todo", "666666", "aaaa00", s:italic)
 
 " Diff
-call s:highlight("DiffAdd", "", "505450", "bold")
-call s:highlight("DiffText", "", "673400", "bold")
-call s:highlight("DiffDelete", "343434", "101010", "bold")
-call s:highlight("DiffChange", "", "53402d", "bold")
+call s:hi("DiffAdd", "", "505450", "bold")
+call s:hi("DiffText", "", "673400", "bold")
+call s:hi("DiffDelete", "343434", "101010", "bold")
+call s:hi("DiffChange", "", "53402d", "bold")
 
 " Spellchek
 " Spell, make it underline, and less bright colors. only for terminal
@@ -247,25 +247,25 @@ call s:undercurl("SpellLocal", "A0CC00")
 
 " Plugins:
 " ShowMarks
-call s:highlight("ShowMarksHLl", "ab8042", "121212", "bold")
-call s:highlight("ShowMarksHLu", "aaab42", "121212", "bold")
-call s:highlight("ShowMarksHLo", "42ab47", "121212", "bold")
-call s:highlight("ShowMarksHLm", "aaab42", "121212", "bold")
+call s:hi("ShowMarksHLl", "ab8042", "121212", "bold")
+call s:hi("ShowMarksHLu", "aaab42", "121212", "bold")
+call s:hi("ShowMarksHLo", "42ab47", "121212", "bold")
+call s:hi("ShowMarksHLm", "aaab42", "121212", "bold")
 
 " Syntastic
 call s:undercurl("SyntasticError ", "880000")
 call s:undercurl("SyntasticWarning", "886600")
 call s:undercurl("SyntasticStyleError", "ff6600")
 call s:undercurl("SyntasticStyleWarning", "ffaa00")
-call s:highlight("SyntasticErrorSign", "", "880000", "")
-call s:highlight("SyntasticWarningSign", "", "886600", "")
-call s:highlight("SyntasticStyleErrorSign", "", "ff6600", "")
-call s:highlight("SyntasticStyleWarningSign", "", "ffaa00", "")
+call s:hi("SyntasticErrorSign", "", "880000", "")
+call s:hi("SyntasticWarningSign", "", "886600", "")
+call s:hi("SyntasticStyleErrorSign", "", "ff6600", "")
+call s:hi("SyntasticStyleWarningSign", "", "ffaa00", "")
 " }}}
 
 " delete functions {{{
 delf s:undercurl
-delf s:highlight
+delf s:hi
 delf s:get_rgb_as_index
 delf s:get_color
 delf s:get_rgb_idx
