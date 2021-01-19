@@ -2,11 +2,11 @@
 " Maintainer: Roman 'gryf' Dobosz
 " Last Change: 2021-01-19
 "
-" wombat256grf.vim - a modified version of Wombat by Lars Nielsen (at al) that
-" also works on xterms with 256 colors. Instead of hard coding colors for the
-" terminal, algorithm for approximating the GUI colors with the xterm palette
-" was used. Approximation function was taken from desert256.vim by
-" Henry So Jr.
+" wombat256grf.vim - a heavily modified version of Wombat by Lars Nielsen (at 
+" al) that also works on xterms with 256 colors. Instead of hard coding colors 
+" for the terminal, algorithm for approximating the GUI colors with the xterm 
+" palette was used.
+" Approximation function was taken from desert256.vim by Henry So Jr.
 
 set background=dark
 
@@ -19,12 +19,20 @@ endif
 
 let g:colors_name = "wombat256grf"
 
+" Run this colorscheme only for Gvim or vim in terminal which support 256 
+" colors.
 if !has("gui_running") && &t_Co != 256
     finish
 endif
 
+" Italic only in gui and only where font is not fixed-misc.
+let s:italic = "none"
+if has("gui_running") && &guifont !~ "Fixed"
+    let s:italic = "italic"
+endif
+
 " functions {{{
-" returns an approximate grey index for the given grey level
+" Returns an approximate grey index for the given grey level.
 fun s:get_approximate_grey_idx(x)
     if a:x < 14
         return 0
@@ -37,12 +45,12 @@ fun s:get_approximate_grey_idx(x)
     return l:n + 1
 endfun
 
-" returns the actual grey level represented by the grey index
+" Returns the actual grey level represented by the grey index.
 fun s:get_grey_level(n)
     return a:n == 0 ? 0 : 8 + (a:n * 10)
 endfun
 
-" returns the palette index for the given grey index
+" Returns the palette index for the given grey index.
 fun s:get_grey_color_idx(n)
     let l:grey_map = {0: 16, 25: 231}
     let l:default = 231 + a:n
@@ -50,7 +58,7 @@ fun s:get_grey_color_idx(n)
     return get(l:grey_map, a:n, l:default)
 endfun
 
-" returns an approximate color index for the given color level
+" Returns an approximate color index for the given color level.
 fun s:get_approximate_rgb_idx(x)
     if a:x < 75
         return 0
@@ -64,17 +72,17 @@ fun s:get_approximate_rgb_idx(x)
     return l:n + 1
 endfun
 
-" returns the actual color level for the given color index
+" Returns the actual color level for the given color index.
 fun s:get_rgb_level(n)
     return a:n == 0 ? 0 : 55 + (a:n * 40)
 endfun
 
-" returns the palette index for the given R/G/B color indices
+" Returns the palette index for the given R/G/B color indices.
 fun s:get_rgb_idx(x, y, z)
     return 16 + (a:x * 36) + (a:y * 6) + a:z
 endfun
 
-" returns the palette index to approximate the given R/G/B color levels
+" Returns the palette index to approximate the given R/G/B color levels.
 fun s:get_color(r, g, b)
     " get the closest grey
     let l:gx = s:get_approximate_grey_idx(a:r)
@@ -107,7 +115,7 @@ fun s:get_color(r, g, b)
     return s:get_rgb_idx(l:x, l:y, l:z)
 endfun
 
-" returns the palette index to approximate the 'rrggbb' hex string
+" Returns the palette index to approximate the 'rrggbb' hex string.
 fun s:get_rgb_as_index(rgb)
     let l:r = ("0x" . strpart(a:rgb, 0, 2)) + 0
     let l:g = ("0x" . strpart(a:rgb, 2, 2)) + 0
@@ -115,7 +123,7 @@ fun s:get_rgb_as_index(rgb)
     return s:get_color(l:r, l:g, l:b)
 endfun
 
-" sets the highlighting for the given group
+" Sets the highlighting for the given group. 
 fun s:highlight(group, fg, bg, attr)
     let l:cmd = "highlight " . a:group
     if a:fg != ""
@@ -147,13 +155,7 @@ fun s:undercurl(group, bg)
 endfun
 " }}}
 
-" italic only in gui and only where font is not fixed-misc!
-let s:italic = "none"
-if has("gui_running") && &guifont !~ "Fixed"
-    let s:italic = "italic"
-endif
-
-
+" Colors {{{
 " non-syntax items, interface, etc
 call s:highlight("Normal",       "dddddd",   "242424",   "none")
 call s:highlight("NonText",      "4c4c36",   "",         "none")
@@ -267,6 +269,7 @@ call s:highlight("SyntasticErrorSign", "", "880000", "")
 call s:highlight("SyntasticWarningSign", "", "886600", "")
 call s:highlight("SyntasticStyleErrorSign", "", "ff6600", "")
 call s:highlight("SyntasticStyleWarningSign", "", "ffaa00", "")
+" }}}
 
 " delete functions {{{
 delf s:undercurl
