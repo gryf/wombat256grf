@@ -2,9 +2,9 @@
 " Maintainer: Roman 'gryf' Dobosz
 " Last Change: 2021-01-19
 "
-" wombat256grf.vim - a heavily modified version of Wombat by Lars Nielsen (at 
-" al) that also works on xterms with 256 colors. Instead of hard coding colors 
-" for the terminal, algorithm for approximating the GUI colors with the xterm 
+" wombat256grf.vim - a heavily modified version of Wombat by Lars Nielsen (at
+" al) that also works on xterms with 256 colors. Instead of hard coding colors
+" for the terminal, algorithm for approximating the GUI colors with the xterm
 " palette was used.
 " Approximation function was taken from desert256.vim by Henry So Jr.
 
@@ -17,7 +17,7 @@ endif
 
 let g:colors_name = "wombat256grf"
 
-" Run this colorscheme only for Gvim or vim in terminal which support 256 
+" Run this colorscheme only for Gvim or vim in terminal which support 256
 " colors.
 if !has("gui_running") && &t_Co != 256
     finish
@@ -113,7 +113,7 @@ fun s:get_rgb_as_index(rgb)
     return s:get_color(l:r, l:g, l:b)
 endfun
 
-" Sets the highlighting for the given group. 
+" Sets the highlighting for the given group.
 fun s:hi(group, fg, bg, attr, special)
     let l:cmd = "highlight " . a:group
     if a:fg != ""
@@ -122,10 +122,10 @@ fun s:hi(group, fg, bg, attr, special)
 
     if a:bg != ""
         if a:special != ""
-            let l:cmd .= " guisp=#" . a:bg . " ctermbg=" . 
+            let l:cmd .= " guisp=#" . a:bg . " ctermbg=" .
                         \s:get_rgb_as_index(a:bg) . " gui=" . a:special
         else
-            let l:cmd .= " guibg=#" . a:bg . " ctermbg=" . 
+            let l:cmd .= " guibg=#" . a:bg . " ctermbg=" .
                         \s:get_rgb_as_index(a:bg)
         endif
     endif
@@ -143,7 +143,7 @@ endfun
 " }}}
 
 " Colors {{{
-" should be in format (columns should be preserved):                    
+" should be in format (columns should be preserved):
 " call s:hi('Group name',   'fg rgb', 'bg rgb', 'attr',   'special')
 "
 " non-syntax items, interface, etc
@@ -153,6 +153,7 @@ call s:hi("NonText",      "4c4c36", "",       "none",   "")
 call s:hi("Cursor",       "222222", "ecee90", "none",   "")
 
 call s:hi("CursorLine",   "",       "32322e", "none",   "")
+call s:hi("CursorLineNr", "caeb82", "",       "bold",   "")
 hi link CursorColumn CursorLine
 call s:hi("ColorColumn",  "",       "2d2d2d", "",       "")
 
